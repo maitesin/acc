@@ -12,8 +12,7 @@ int main(int argc, char * argv[])
 	int debug_lexer = 0; // -l
 	int debug_ast = 0; // -a
 	char * filename = NULL;
-	int c;
-	int errors;
+	int c = 0;
 
 	// Lexer, grammar and generator
 	lexer lex;
@@ -42,10 +41,10 @@ int main(int argc, char * argv[])
 	init_grammar(&gra, &lex);
 	init_generator(&gen, &gra);
 	// Do the magic stuff
-	errors = generate_code(&gen);
+	generate_code(&gen);
 	// Release stuff adquired from the lexer, the grammar and the generator
 	destroy_generator(&gen);
 	destroy_grammar(&gra);
 	destroy_lexer(&lex);
-	return errors;
+	return 0;
 }

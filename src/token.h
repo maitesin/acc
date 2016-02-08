@@ -4,16 +4,16 @@
 #include <stdlib.h>
 
 enum token_type {
-	INT_TYPE,
-	INT_VALUE,
-	FUNCTION,
-	OPAR,
-	CPAR,
-	OBRA,
-	CBRA,
-	RETURN,
-	SEMICOLON,
-	END_OF_FILE
+	T_INT_TYPE,
+	T_INT_VALUE,
+	T_FUNCTION,
+	T_OPAR,
+	T_CPAR,
+	T_OBRA,
+	T_CBRA,
+	T_RETURN,
+	T_SEMICOLON,
+	T_END_OF_FILE
 };
 
 /*

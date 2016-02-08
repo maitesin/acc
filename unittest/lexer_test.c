@@ -7,8 +7,8 @@
 void simple_file_only_main(void)
 {
 	const char * filename = "unittest/resources/simple_file_only_main.c";
-	struct lexer l;
-	struct token_base * token;
+	lexer l;
+	token_base * token;
 
 	// Initialize lexer
 	init_lexer(&l, filename);
@@ -17,25 +17,25 @@ void simple_file_only_main(void)
 	 * Check that the tokens generated are the right ones
 	 */
 	token = next(&l); // int
-	TEST_ASSERT_EQUAL(INT_TYPE, token->type);
+	TEST_ASSERT_EQUAL(T_INT_TYPE, token->type);
 	token = next(&l); // main
-	TEST_ASSERT_EQUAL(FUNCTION, token->type);
+	TEST_ASSERT_EQUAL(T_FUNCTION, token->type);
 	token = next(&l); // (
-	TEST_ASSERT_EQUAL(OPAR, token->type);
+	TEST_ASSERT_EQUAL(T_OPAR, token->type);
 	token = next(&l); // )
-	TEST_ASSERT_EQUAL(CPAR, token->type);
+	TEST_ASSERT_EQUAL(T_CPAR, token->type);
 	token = next(&l); // {
-	TEST_ASSERT_EQUAL(OBRA, token->type);
+	TEST_ASSERT_EQUAL(T_OBRA, token->type);
 	token = next(&l); // return
-	TEST_ASSERT_EQUAL(RETURN, token->type);
+	TEST_ASSERT_EQUAL(T_RETURN, token->type);
 	token = next(&l); // 2
-	TEST_ASSERT_EQUAL(INT_VALUE, token->type);
+	TEST_ASSERT_EQUAL(T_INT_VALUE, token->type);
 	token = next(&l); // ;
-	TEST_ASSERT_EQUAL(SEMICOLON, token->type);
+	TEST_ASSERT_EQUAL(T_SEMICOLON, token->type);
 	token = next(&l); // }
-	TEST_ASSERT_EQUAL(CBRA, token->type);
+	TEST_ASSERT_EQUAL(T_CBRA, token->type);
 	token = next(&l); // END_OF_FILE
-	TEST_ASSERT_EQUAL(END_OF_FILE, token->type);
+	TEST_ASSERT_EQUAL(T_END_OF_FILE, token->type);
 
 	// Destroy lexer
 	destroy_lexer(&l);
