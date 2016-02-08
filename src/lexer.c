@@ -21,7 +21,9 @@ struct token_base * next(lexer * l) {
 	tmp = fgetc(l->f);
 	while (!feof(l->f))
 	{
-		if (state == 0) {
+		switch(state)
+		{
+		case 0:
 			if (tmp == '\t' || tmp == ' ' || tmp == '\n')
 			{
 				tmp = fgetc(l->f); // Skip these characters
@@ -83,8 +85,7 @@ struct token_base * next(lexer * l) {
 				state = 4;
 			}
 
-		} else if (state == 1)
-		{
+		case 1:
 			// Find the whole number
 			while (tmp >= '0' && tmp <= '9') {
 				buffer[pos++] = tmp;
@@ -96,8 +97,7 @@ struct token_base * next(lexer * l) {
 				malloc(sizeof(struct token_int_value));
 			init_token_int_value(result, atoi(buffer));
 			return result;
-		} else if (state == 2)
-		{
+		case 2:
 			if (tmp != 'n')
 			{
 				// Could be a function or a variable name
@@ -114,8 +114,7 @@ struct token_base * next(lexer * l) {
 				malloc(sizeof(struct token_int_type));
 			init_token_int_type(result);
 			return result;
-		} else if (state == 3)
-		{
+		case 3:
 			if (tmp != 'a')
 			{
 				// Could be a function or a variable name
@@ -141,8 +140,7 @@ struct token_base * next(lexer * l) {
 				malloc(sizeof(struct token_function));
 			init_token_function(result, buffer);
 			return result;
-		} else if (state == 4)
-		{
+		case 4:
 			if (tmp != 'e')
 			{
 				// Could be a function or a variable name
