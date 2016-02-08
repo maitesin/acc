@@ -67,8 +67,8 @@ void __generate_code_for_return(ast_base * ast)
 	return_ast = (node_return *) ast;
 	return_value = return_ast->value;
 
-	fprintf(stdout, "mv r0 ");
-	switch(return_ast->base.type)
+	fprintf(stdout, "\tmv r0 ");
+	switch(return_value->type)
 	{
 		case A_INT:
 			__generate_code_for_int(return_value);

@@ -63,7 +63,6 @@ ast_base * read_function_body(grammar * g)
 {
 	ast_base * root = NULL;
 	ast_base * return_ast_value = NULL;
-	ast_base * return_ast_node = NULL;
 	token_base * token = NULL;
 	token_int_value * int_value = NULL;
 
@@ -91,8 +90,15 @@ ast_base * read_function_body(grammar * g)
 	return_ast_value = (ast_base *) malloc(sizeof(node_int));
 	init_node_int((node_int *)return_ast_value, int_value->value);
 
-	return_ast_node = (ast_base *) malloc(sizeof(node_return));
-	init_node_return((node_return *)return_ast_node, return_ast_value);
+	root = (ast_base *) malloc(sizeof(node_return));
+	init_node_return((node_return *)root, return_ast_value);
+
+	token = next(g->l);
+	if (token->type != T_SEMICOLON)
+	{
+		fprintf(stderr, "SEMICOLON not found at the end of the function body");
+		exit(EXIT_FAILURE);
+	}
 
 	token = next(g->l);
 	if (token->type != T_CBRA)
