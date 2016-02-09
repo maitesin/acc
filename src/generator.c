@@ -45,8 +45,7 @@ void __generate_code_for_function(generator * g, node_function * ast)
 {
 	ast_base * body = ast->entry_point;
 
-	fprintf(g->f, "%s:", "main");
-	printf("%s\n", ast->name);
+	fprintf(g->f, "%s:", ast->name);
 	switch(body->type)
 	{
 		case A_RETURN:
