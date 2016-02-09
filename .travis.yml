@@ -12,3 +12,29 @@ script:
 after_success:
 - make test
 - coveralls --exclude "unittest" --exclude "CMakeFiles" --include "src" --gcov-options '\-lp' --gcov 'gcov-4.9' 
+
+addons:
+  coverity_scan:
+    # GitHub project metadata
+    # ** specific to your project **
+
+    project:
+      name: maitesin/acc
+      version: 0.1
+      description: ARM C Compiler
+
+    # Where email notification of build analysis results will be sent
+    notification_email: violador.de.segmentos@gmail.com
+
+    # Commands to prepare for build_command
+    # ** likely specific to your build **
+    build_command_prepend: cmake .
+
+    # The command that will be added as an argument to "cov-build" to compile your project for analysis,
+    # ** likely specific to your build **
+    build_command: make
+
+    # Pattern to match selecting branches that will run analysis. We recommend leaving this set to 'coverity_scan'.
+    # Take care in resource usage, and consider the build frequency allowances per
+    #   https://scan.coverity.com/faq#frequency
+  branch_pattern: master
