@@ -51,7 +51,7 @@ int main(int argc, char * argv[])
 	}
 	if (optind < argc)
 	{
-		return my_main(argv[optind], file_output == NULL ? "a.asm" : file_output);
+		return my_main(argv[optind], file_output == NULL ? "a.s" : file_output);
 	} else
 	{
 		fprintf(stderr, "You need to provide a source file to compile\n");
