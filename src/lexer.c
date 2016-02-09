@@ -13,10 +13,11 @@ void destroy_lexer(lexer * l) {
 
 struct token_base * next(lexer * l) {
 	char buffer[512];
+	char * buff_copy = NULL;
 	int pos = 0;
 	size_t state = 0;
 	char tmp;
-	void * result;
+	void * result = NULL;
 
 	tmp = fgetc(l->f);
 	while (!feof(l->f))
@@ -84,7 +85,7 @@ struct token_base * next(lexer * l) {
 				tmp = fgetc(l->f);
 				state = 4;
 			}
-
+			break;
 		case 1:
 			// Find the whole number
 			while (tmp >= '0' && tmp <= '9') {
@@ -136,9 +137,12 @@ struct token_base * next(lexer * l) {
 			}
 			buffer[pos++] = tmp;
 			buffer[pos] = '\0';
+			buff_copy = (char *) malloc(sizeof(char)*pos+1);
+			strncpy(buff_copy, buffer, pos);
+			buff_copy[pos] = '\0';
 			result = (struct token_function *)
 				malloc(sizeof(struct token_function));
-			init_token_function(result, buffer);
+			init_token_function(result, buff_copy);
 			return result;
 		case 4:
 			if (tmp != 'e')
