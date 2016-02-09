@@ -23,7 +23,7 @@ void generate_code(generator * g)
 
 void __generate_code(generator * g, ast_base * ast)
 {
-	fprintf(g->f, "COMMON STUFF ON TOP\n");
+	fprintf(g->f, "\t.text\n\t.global main\n");
 	__generate_code_for_main(g, ast);
 }
 
@@ -45,7 +45,7 @@ void __generate_code_for_function(generator * g, node_function * ast)
 {
 	ast_base * body = ast->entry_point;
 
-	fprintf(g->f, "%s:", ast->name);
+	fprintf(g->f, "%s:\n", ast->name);
 	switch(body->type)
 	{
 		case A_RETURN:
@@ -62,7 +62,7 @@ void __generate_code_for_return(generator * g, node_return * ast)
 {
 	ast_base * return_value = ast->value;
 
-	fprintf(g->f, "\tmv r0 ");
+	fprintf(g->f, "\tmov r0, ");
 	switch(return_value->type)
 	{
 		case A_INT:
@@ -73,10 +73,10 @@ void __generate_code_for_return(generator * g, node_return * ast)
 			fprintf(stderr, "Invalid value for a return statement\n");
 			exit(EXIT_FAILURE);
 	}
-	fprintf(g->f, "\n");
+	fprintf(g->f, "\n\tbx lr\n");
 }
 
 void __generate_code_for_int(generator * g, node_int * ast)
 {
-	fprintf(g->f, "%d", ast->value);
+	fprintf(g->f, "#%d", ast->value);
 }
