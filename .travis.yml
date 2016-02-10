@@ -6,6 +6,7 @@ install:
 - sudo pip install cpp-coveralls
 
 script:
+- export CC=gcc
 - cmake .
 - make
 
