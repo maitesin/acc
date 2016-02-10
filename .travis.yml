@@ -6,13 +6,12 @@ install:
 - sudo pip install cpp-coveralls
 
 script:
-- export CC=gcc
-- cmake .
+- CC=gcc cmake .
 - make
 
 after_success:
 - make test
-- coveralls --exclude "unittest" --exclude "CMakeFiles" --include "src"  
+- coveralls --exclude "unittest" --exclude "CMakeFiles" --include "src" --gcov-options '\-lp'  
 
 addons:
   coverity_scan:
