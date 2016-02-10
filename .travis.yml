@@ -8,6 +8,7 @@ install:
 script:
 - CC=gcc cmake .
 - make
+- ls -R | grep gcno
 
 after_success:
 - make test
