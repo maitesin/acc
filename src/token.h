@@ -39,7 +39,7 @@ typedef struct token_int_value
 typedef struct token_function
 {
 	token_base base;
-	const char * name;
+	char * name;
 } token_function;
 
 typedef struct token_opar
@@ -82,7 +82,7 @@ typedef struct token_eof
  */
 void init_token_int_type(token_int_type * token);
 void init_token_int_value(token_int_value * token, int  value);
-void init_token_function(token_function * token, const char * name);
+void init_token_function(token_function * token, char * name);
 void init_token_opar(token_opar * token);
 void init_token_cpar(token_cpar * token);
 void init_token_obra(token_obra * token);
@@ -91,4 +91,17 @@ void init_token_return(token_return * token);
 void init_token_semicolon(token_semicolon * token);
 void init_token_eof(token_eof * token);
 
+/*
+ * Release functions for the tokens
+ */
+void free_token_int_type(token_int_type * token);
+void free_token_int_value(token_int_value * token);
+void free_token_function(token_function * token);
+void free_token_opar(token_opar * token);
+void free_token_cpar(token_cpar * token);
+void free_token_obra(token_obra * token);
+void free_token_cbra(token_cbra * token);
+void free_token_return(token_return * token);
+void free_token_semicolon(token_semicolon * token);
+void free_token_eof(token_eof * token);
 #endif //TOKEN_H
