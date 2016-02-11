@@ -33,6 +33,7 @@ void __generate_code_for_main(generator * g, ast_base * ast)
 	{
 		case A_FUNCTION:
 			__generate_code_for_function(g, (node_function *)ast);
+			free_node_function((node_function *)ast);
 			break;
 		default:
 			//This is an error!
@@ -50,6 +51,7 @@ void __generate_code_for_function(generator * g, node_function * ast)
 	{
 		case A_RETURN:
 			__generate_code_for_return(g, (node_return *)body);
+			free_node_return((node_return *)body);
 			break;
 		default:
 			//This is an error!
@@ -67,6 +69,7 @@ void __generate_code_for_return(generator * g, node_return * ast)
 	{
 		case A_INT:
 			__generate_code_for_int(g, (node_int *)return_value);
+			free_node_int((node_int *)return_value);
 			break;
 		default:
 			//This is an error!
