@@ -80,7 +80,6 @@ void free_token_int_value(token_int_value * token)
 
 void free_token_function(token_function * token)
 {
-	free(token->name);
 	free(token);
 }
 
