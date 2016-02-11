@@ -43,3 +43,4 @@ addons:
     # Take care in resource usage, and consider the build frequency allowances per
     #   https://scan.coverity.com/faq#frequency
   branch_pattern: master
+
