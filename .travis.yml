@@ -1,6 +1,7 @@
 language: c
 compiler:
 - gcc
+- clang
 
 install:
 - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
