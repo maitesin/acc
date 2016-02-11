@@ -28,22 +28,14 @@ int my_main(const char * file_input, const char * file_output)
 int main(int argc, char * argv[])
 {
 	// Parameters
-	int debug_lexer = 0; // -l
-	int debug_ast = 0; // -a
 	char * file_output = NULL;
 	int c = 0;
 
 	// Parse parameters
-	while ((c = getopt(argc, argv, "alo:")) != -1)
+	while ((c = getopt(argc, argv, "o:")) != -1)
 	{
 		switch(c)
 		{
-		case 'a':
-			debug_ast = 1;
-			break;
-		case 'l':
-			debug_lexer = 1;
-			break;
 		case 'o':
 			file_output = optarg;
 			break;
