@@ -28,32 +28,28 @@ ast_base * read_function_ast_node(grammar * g)
 	token = next(g->l);
 	if (token->type != T_INT_TYPE)
 	{
-		fprintf(stderr, "INT_TYPE not found at the beginning of a function signature");
-		exit(EXIT_FAILURE);
+		return NULL;
 	}
 	free_token_int_type((token_int_type *)token);
 
 	token = next(g->l);
 	if (token->type != T_FUNCTION)
 	{
-		fprintf(stderr, "FUNCTION not found as second entry for reading a function");
-		exit(EXIT_FAILURE);
+		return NULL;
 	}
 	function_name = (token_function *) token;
 
 	token = next(g->l);
 	if (token->type != T_OPAR)
 	{
-		fprintf(stderr, "OPAR not found after the name of the function");
-		exit(EXIT_FAILURE);
+		return NULL;
 	}
 	free_token_opar((token_opar *)token);
 
 	token = next(g->l);
 	if (token->type != T_CPAR)
 	{
-		fprintf(stderr, "CPAR not found after the name of the function");
-		exit(EXIT_FAILURE);
+		return NULL;
 	}
 	free_token_cpar((token_cpar *)token);
 
@@ -75,24 +71,21 @@ ast_base * read_function_body(grammar * g)
 	token = next(g->l);
 	if (token->type != T_OBRA)
 	{
-		fprintf(stderr,	"OBRA not found at the beginning of the function body");
-		exit(EXIT_FAILURE);
+		return NULL;
 	}
 	free_token_obra((token_obra *)token);
 
 	token = next(g->l);
 	if (token->type != T_RETURN)
 	{
-		fprintf(stderr, "RETURN not found just before the end of the function body");
-		exit(EXIT_FAILURE);
+		return NULL;
 	}
 	free_token_return((token_return *)token);
 
 	token = next(g->l);
 	if (token->type != T_INT_VALUE)
 	{
-		fprintf(stderr, "INT_VALUE not found after return statement");
-		exit(EXIT_FAILURE);
+		return NULL;
 	}
 	int_value = (token_int_value *) token;
 	return_ast_value = (ast_base *) malloc(sizeof(node_int));
@@ -105,16 +98,14 @@ ast_base * read_function_body(grammar * g)
 	token = next(g->l);
 	if (token->type != T_SEMICOLON)
 	{
-		fprintf(stderr, "SEMICOLON not found at the end of the function body");
-		exit(EXIT_FAILURE);
+		return NULL;
 	}
 	free_token_semicolon((token_semicolon *)token);
 
 	token = next(g->l);
 	if (token->type != T_CBRA)
 	{
-		fprintf(stderr, "CBRA not found at the end of the function body");
-		exit(EXIT_FAILURE);
+		return NULL;
 	}
 	free_token_cbra((token_cbra *)token);
 	return root;
