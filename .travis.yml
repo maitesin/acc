@@ -16,7 +16,7 @@ script:
 
 after_success:
 - make test
-- coveralls --exclude "CMakeFiles" --include "unittest" --include "src" --gcov-options '\-lp' --gcov 'gcov-4.9' 
+- coveralls --exclude "CMakeFiles" --include "src" --gcov-options '\-lp' --gcov 'gcov-4.9' 
 
 addons:
   coverity_scan:
