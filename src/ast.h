@@ -7,7 +7,8 @@ enum ast_type {
 	A_ID,
 	A_INT,
 	A_FUNCTION,
-	A_RETURN
+	A_RETURN,
+	A_IF
 };
 
 /*
@@ -16,7 +17,6 @@ enum ast_type {
 typedef struct ast_base
 {
 	enum ast_type type;
-	void * ast_pointer;
 } ast_base;
 
 typedef struct node_id
@@ -44,6 +44,12 @@ typedef struct node_return
 	ast_base * value;
 } node_return;
 
+typedef struct node_if
+{
+	ast_base base;
+	ast_base * expression;
+} node_if;
+
 /*
  * Init functions for the AST nodes
  */
@@ -51,6 +57,7 @@ void init_node_id(node_id * node, char * value);
 void init_node_int(node_int * node, int value);
 void init_node_function(node_function * node, char * name, ast_base * entry_point);
 void init_node_return(node_return * node, ast_base * value);
+void init_node_if(node_if * node, ast_base * expression);
 
 /*
  * Release functions for the AST nodes
@@ -59,4 +66,5 @@ void free_node_id(node_id * node);
 void free_node_int(node_int * node);
 void free_node_function(node_function * node);
 void free_node_return(node_return * node);
+void free_node_if(node_if * node);
 #endif //AST_H
