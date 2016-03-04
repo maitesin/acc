@@ -5,10 +5,16 @@
 
 void init_lexer(lexer * l, const char * filename) {
 	l->f = fopen(filename, "r");
+	l->stack = NULL;
 }
 
 void destroy_lexer(lexer * l) {
 	fclose(l->f);
+}
+
+void free_stack_base(stack_base * s)
+{
+	free(s);
 }
 
 struct token_base * next(lexer * l) {
@@ -18,6 +24,17 @@ struct token_base * next(lexer * l) {
 	size_t state = 0;
 	char tmp;
 	void * result = NULL;
+	stack_base * stack = NULL;
+
+	if (l->stack != NULL)
+	{
+		stack_base * stack = l->stack;
+		l->stack = l->stack->next;
+		result = stack->token;
+		stack->token = NULL;
+		free_stack_base(stack);
+		return result;
+	}
 
 	tmp = fgetc(l->f);
 	while (!feof(l->f))
@@ -189,3 +206,10 @@ struct token_base * next(lexer * l) {
 	return result;
 }
 
+void push_back(lexer * l, token_base * t)
+{
+	stack_base * s = (stack_base *) malloc(sizeof(stack_base));
+	s->token = t;
+	s->next = l->stack;
+	l->stack = s;
+}
