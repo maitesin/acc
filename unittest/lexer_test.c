@@ -41,9 +41,76 @@ void simple_file_only_main(void)
 	destroy_lexer(&l);
 }
 
+void push_token_to_stack(void)
+{
+	const char * filename = "unittest/resources/simple_file_only_main.c";
+	lexer l;
+	token_base * token;
+
+	// Init stuff
+	init_lexer(&l, filename);
+	token = (token_base *) malloc(sizeof(token_int_value));
+
+	// Check the stuff
+	push_back(&l, token);
+	TEST_ASSERT_EQUAL(l.stack->token, token);
+
+	// Destroy stuff
+	destroy_lexer(&l);
+	free(token);
+}
+
+void push_two_tokens_to_stack(void)
+{
+	const char * filename = "unittest/resources/simple_file_only_main.c";
+	lexer l;
+	token_base * token1;
+	token_base * token2;
+
+	// Init stuff
+	init_lexer(&l, filename);
+	token1 = (token_base *) malloc(sizeof(token_int_value));
+	token2 = (token_base *) malloc(sizeof(token_int_value));
+
+	// Check the stuff
+	push_back(&l, token1);
+	TEST_ASSERT_EQUAL(l.stack->token, token1);
+	push_back(&l, token2);
+	TEST_ASSERT_EQUAL(l.stack->token, token2);
+
+	// Destroy stuff
+	destroy_lexer(&l);
+	free(token1);
+	free(token2);
+}
+
+void push_token_and_call_next(void)
+{
+	const char * filename = "unittest/resources/simple_file_only_main.c";
+	lexer l;
+	token_base * token;
+	token_base * received;
+
+	// Init stuff
+	init_lexer(&l, filename);
+	token = (token_base *) malloc(sizeof(token_int_value));
+
+	// Check the stuff
+	push_back(&l, token);
+	received = next(&l);
+	TEST_ASSERT_EQUAL(token, received);
+
+	// Destroy stuff
+	destroy_lexer(&l);
+	free(token);
+}
+
 int main(void)
 {
 	UNITY_BEGIN();
 	RUN_TEST(simple_file_only_main);
+	RUN_TEST(push_token_to_stack);
+	RUN_TEST(push_two_tokens_to_stack);
+	RUN_TEST(push_token_and_call_next);
 	return UNITY_END();
 }
