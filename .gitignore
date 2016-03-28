@@ -17,6 +17,9 @@
 # Debug files
 *.dSYM/
 
+# Ctags
+tags
+
 # Stuff to avoid the cmake stuff
 **/CMakeFiles
 **/CMakeCache.txt
