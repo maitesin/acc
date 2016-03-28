@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "lexer.h"
 #include "ast.h"
+#include "token.h"
 
 typedef struct grammar
 {
@@ -20,4 +21,11 @@ void destroy_grammar(grammar * g);
  */
 ast_base * read_function_ast_node(grammar * g);
 ast_base * read_function_body(grammar * g);
+ast_base * read_return_expression(grammar * g);
+ast_base * read_if_statement(grammar * g);
+ast_base * read_boolean_expression(grammar * g);
+ast_base * read_boolean_binary_expression(grammar * g);
+ast_base * read_boolean_unary_expression(grammar * g);
+
+
 #endif //GRAMMAR_H
