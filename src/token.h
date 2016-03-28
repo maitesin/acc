@@ -13,7 +13,9 @@ enum token_type {
 	T_CBRA,
 	T_RETURN,
 	T_SEMICOLON,
-	T_END_OF_FILE
+	T_END_OF_FILE,
+	T_IF,
+	T_BOOLEAN_OP
 };
 
 /*
@@ -22,7 +24,6 @@ enum token_type {
 typedef struct token_base
 {
 	enum token_type type;
-	void * token_pointer;
 } token_base;
 
 typedef struct token_int_type
@@ -77,6 +78,17 @@ typedef struct token_eof
 	token_base base;
 } token_eof;
 
+typedef struct token_if
+{
+	token_base base;
+} token_if;
+
+typedef struct token_boolean_op
+{
+	token_base base;
+	char * op;
+} token_boolean_op;
+
 /*
  * Init functions for the tokens
  */
@@ -90,6 +102,8 @@ void init_token_cbra(token_cbra * token);
 void init_token_return(token_return * token);
 void init_token_semicolon(token_semicolon * token);
 void init_token_eof(token_eof * token);
+void init_token_if(token_if * token);
+void init_token_boolean_op(token_boolean_op * token, char * op);
 
 /*
  * Release functions for the tokens
@@ -104,4 +118,6 @@ void free_token_cbra(token_cbra * token);
 void free_token_return(token_return * token);
 void free_token_semicolon(token_semicolon * token);
 void free_token_eof(token_eof * token);
+void free_token_if(token_if * token);
+void free_token_boolean_op(token_boolean_op * token);
 #endif //TOKEN_H
