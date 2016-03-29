@@ -186,7 +186,7 @@ ast_base * read_boolean_expression(grammar * g)
 					else
 					{
 						fprintf(stderr, "Error during read_boolean_expression with int value:%d\n", ((token_int_value *)token)->value);
-						exit(-1);
+						exit(EXIT_FAILURE);
 					}
 				}
 				break;

@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "ast.h"
 
 /*
@@ -46,6 +47,33 @@ void init_node_boolean_operator(node_boolean_operator * node, enum boolean_opera
 /*
  * Release functions implementation
  */
+void free_node(ast_base * base)
+{
+	switch(base->type)
+	{
+	case A_ID:
+		free_node_id((node_id *)base);
+		break;
+	case A_INT:
+		free_node_int((node_int *)base);
+		break;
+	case A_FUNCTION:
+		free_node_function((node_function *)base);
+		break;
+	case A_RETURN:
+		free_node_return((node_return *)base);
+		break;
+	case A_IF:
+		free_node_if((node_if *)base);
+		break;
+	case A_BOOLEAN_OPERATOR:
+		free_node_boolean_operator((node_boolean_operator *)base);
+		break;
+	default:
+		fprintf(stderr, "Error, unable to free ast_base\n");
+		exit(EXIT_FAILURE);
+	}
+}
 void free_node_id(node_id * node)
 {
 	free(node);
@@ -63,8 +91,19 @@ void free_node_return(node_return * node)
 {
 	free(node);
 }
+void free_node_if(node_if * node)
+{
+	free_node(node->expression);
+	free(node);
+}
+void free_node_boolean_operator(node_boolean_operator * node)
+{
+	free_node(node->first);
+	free_node(node->second);
+	free(node);
+}
 
-enum boolean_operator_type set_node_boolean_op_value(token_boolean_op * token)
+enum boolean_operator_type get_boolean_op_value(token_boolean_op * token)
 {
 	size_t len = strnlen(token->op,2);
 	if (len == 2)
@@ -80,8 +119,7 @@ enum boolean_operator_type set_node_boolean_op_value(token_boolean_op * token)
 		else
 		{
 			fprintf(stderr, "Error, %s cannot be proccessed as a boolean operator\n", token->op);
-			exit(-1);
-
+			exit(EXIT_FAILURE);
 		}
 	}
 	else
@@ -96,7 +134,7 @@ enum boolean_operator_type set_node_boolean_op_value(token_boolean_op * token)
 				return B_GT;
 			default:
 				fprintf(stderr, "Error, %s cannot be proccessed as a boolean operator\n", token->op);
-				exit(-1);
+				exit(EXIT_FAILURE);
 		}
 	}
 }
