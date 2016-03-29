@@ -86,6 +86,11 @@ struct token_base * next(lexer * l) {
 					malloc(sizeof(struct token_semicolon));
 				init_token_semicolon(result);
 				return result;
+			} else if (tmp == 'e')
+			{
+				buffer[pos++] = tmp;
+				tmp = fgetc(l->f);
+				state = 5;
 			} else if (tmp == 'i')
 			{
 				buffer[pos++] = tmp;
@@ -116,22 +121,31 @@ struct token_base * next(lexer * l) {
 			init_token_int_value(result, atoi(buffer));
 			return result;
 		case 2:
-			if (tmp != 'n')
+			switch(tmp)
 			{
-				// Could be a function or a variable name
-				exit(EXIT_FAILURE);
+				case 'n':
+					buffer[pos++] = tmp;
+					tmp = fgetc(l->f);
+					if (tmp != 't')
+					{
+						// Could be a function or a variable name
+						exit(EXIT_FAILURE);
+					}
+					result = (struct token_int_type *)
+					malloc(sizeof(struct token_int_type));
+					init_token_int_type(result);
+					return result;
+				case 'f':
+					buffer[pos++] = tmp;
+					buffer[pos] = '\0';
+					result = (struct token_if *)
+						malloc(sizeof(struct token_if));
+					init_token_if(result);
+					return result;
+				default:
+					// Could be a function or a variable name
+					exit(EXIT_FAILURE);
 			}
-			buffer[pos++] = tmp;
-			tmp = fgetc(l->f);
-			if (tmp != 't')
-			{
-				// Could be a function or a variable name
-				exit(EXIT_FAILURE);
-			}
-			result = (struct token_int_type *)
-				malloc(sizeof(struct token_int_type));
-			init_token_int_type(result);
-			return result;
 		case 3:
 			if (tmp != 'a')
 			{

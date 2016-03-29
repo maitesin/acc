@@ -194,6 +194,33 @@ ast_base * read_boolean_expression(grammar * g)
 				op = get_boolean_op_value((token_boolean_op *)token);
 				op_found = 1;
 				break;
+			case T_OPAR:
+				tmp = read_boolean_expression(g);
+				if (root == NULL)
+				{
+					root = tmp;
+				}
+				else
+				{
+					if (op_found)
+					{
+						tmp = read_boolean_binary_expression(g);
+						first = root;
+						second = tmp;
+						root = (ast_base *) malloc(sizeof(node_boolean_operator));
+						init_node_boolean_operator((node_boolean_operator *)root, op, first, second);
+						op_found = 0;
+					}
+					else
+					{
+						fprintf(stderr, "Error during read_boolean_expression\n");
+						exit(EXIT_FAILURE);
+					}
+				}
+				break;
+			default:
+				fprintf(stderr, "Error reading boolean expression\n");
+				exit(EXIT_FAILURE);
 		}
 		token = next(g->l);
 	}
