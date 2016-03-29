@@ -12,10 +12,12 @@ DEFINE_FFF_GLOBALS;
 #define RUN_TEST(SUITE, TESTNAME) printf(" Running %s.%s: \n", #SUITE, #TESTNAME); setup(); TESTNAME(); printf(" SUCCESS\n");
 
 FAKE_VALUE_FUNC1(token_base *, next, lexer *);
+FAKE_VOID_FUNC2(push_back, lexer *, token_base *);
 
 void setup()
 {
 	RESET_FAKE(next);
+	RESET_FAKE(push_back);
 }
 
 TEST_F(GrammarTest, no_int_as_first_stuff)
