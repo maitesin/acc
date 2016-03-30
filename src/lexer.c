@@ -3,13 +3,23 @@
 #include "lexer.h"
 #include "token.h"
 
-void init_lexer(lexer * l, const char * filename) {
-	l->f = fopen(filename, "r");
+void init_lexer(lexer * l, char * code)
+{
+	l->f = code;
 	l->stack = NULL;
+	l->count = 0;
 }
 
-void destroy_lexer(lexer * l) {
-	fclose(l->f);
+void destroy_lexer(lexer * l)
+{
+	stack_base * tmp = NULL;
+	stack_base * s = l->stack;
+	if (s != NULL)
+	{
+		tmp = s;
+		s = s->next;
+		free_stack_base(tmp);
+	}
 }
 
 void free_stack_base(stack_base * s)
@@ -17,7 +27,39 @@ void free_stack_base(stack_base * s)
 	free(s);
 }
 
-struct token_base * next(lexer * l) {
+void push_back(lexer * l, token_base * t)
+{
+	stack_base * s = (stack_base *) malloc(sizeof(stack_base));
+	s->token = t;
+	s->next = l->stack;
+	l->stack = s;
+}
+
+char get_char(lexer * l)
+{
+	return l->f[l->count++];
+}
+
+void push_back_chars(lexer * l, size_t amount)
+{
+	if (l->count >= amount)
+	{
+		l->count -= amount;
+	}
+	else
+	{
+		fprintf(stderr, "Error moving back in the buffer\n");
+		exit(EXIT_FAILURE);
+	}
+}
+
+void push_back_one_char(lexer * l)
+{
+	push_back_chars(l, 1);
+}
+
+struct token_base * next(lexer * l)
+{
 	char buffer[512];
 	char * buff_copy = NULL;
 	int pos = 0;
@@ -36,15 +78,15 @@ struct token_base * next(lexer * l) {
 		return result;
 	}
 
-	tmp = fgetc(l->f);
-	while (!feof(l->f))
+	tmp = get_char(l);
+	while (tmp != '\0')
 	{
 		switch(state)
 		{
 		case 0:
 			if (tmp == '\t' || tmp == ' ' || tmp == '\n')
 			{
-				tmp = fgetc(l->f); // Skip these characters
+				tmp = get_char(l); // Skip these characters
 			}
 			else if (tmp == '0') {
 				result = (struct token_int_value *)
@@ -54,7 +96,7 @@ struct token_base * next(lexer * l) {
 			} else if (tmp >= '1' && tmp <= '9')
 			{
 				buffer[pos++] = tmp;
-				tmp = fgetc(l->f);
+				tmp = get_char(l);
 				state = 1;
 			} else if (tmp == '(')
 			{
@@ -89,22 +131,22 @@ struct token_base * next(lexer * l) {
 			} else if (tmp == 'e')
 			{
 				buffer[pos++] = tmp;
-				tmp = fgetc(l->f);
+				tmp = get_char(l);
 				state = 5;
 			} else if (tmp == 'i')
 			{
 				buffer[pos++] = tmp;
-				tmp = fgetc(l->f);
+				tmp = get_char(l);
 				state = 2;
 			} else if (tmp == 'm')
 			{
 				buffer[pos++] = tmp;
-				tmp = fgetc(l->f);
+				tmp = get_char(l);
 				state = 3;
 			} else if (tmp == 'r')
 			{
 				buffer[pos++] = tmp;
-				tmp = fgetc(l->f);
+				tmp = get_char(l);
 				state = 4;
 			}
 			break;
@@ -112,9 +154,9 @@ struct token_base * next(lexer * l) {
 			// Find the whole number
 			while (tmp >= '0' && tmp <= '9') {
 				buffer[pos++] = tmp;
-				tmp = fgetc(l->f);
+				tmp = get_char(l);
 			}
-			fseek(l->f, -1, SEEK_CUR);
+			push_back_one_char(l);
 			buffer[pos] = '\0';
 			result = (struct token_int_value *)
 				malloc(sizeof(struct token_int_value));
@@ -125,7 +167,7 @@ struct token_base * next(lexer * l) {
 			{
 				case 'n':
 					buffer[pos++] = tmp;
-					tmp = fgetc(l->f);
+					tmp = get_char(l);
 					if (tmp != 't')
 					{
 						// Could be a function or a variable name
@@ -153,14 +195,14 @@ struct token_base * next(lexer * l) {
 				exit(EXIT_FAILURE);
 			}
 			buffer[pos++] = tmp;
-			tmp = fgetc(l->f);
+			tmp = get_char(l);
 			if (tmp != 'i')
 			{
 				// Could be a function or a variable name
 				exit(EXIT_FAILURE);
 			}
 			buffer[pos++] = tmp;
-			tmp = fgetc(l->f);
+			tmp = get_char(l);
 			if (tmp != 'n')
 			{
 				// Could be a function or a variable name
@@ -182,28 +224,28 @@ struct token_base * next(lexer * l) {
 				exit(EXIT_FAILURE);
 			}
 			buffer[pos++] = tmp;
-			tmp = fgetc(l->f);
+			tmp = get_char(l);
 			if (tmp != 't')
 			{
 				// Could be a function or a variable name
 				exit(EXIT_FAILURE);
 			}
 			buffer[pos++] = tmp;
-			tmp = fgetc(l->f);
+			tmp = get_char(l);
 			if (tmp != 'u')
 			{
 				// Could be a function or a variable name
 				exit(EXIT_FAILURE);
 			}
 			buffer[pos++] = tmp;
-			tmp = fgetc(l->f);
+			tmp = get_char(l);
 			if (tmp != 'r')
 			{
 				// Could be a function or a variable name
 				exit(EXIT_FAILURE);
 			}
 			buffer[pos++] = tmp;
-			tmp = fgetc(l->f);
+			tmp = get_char(l);
 			if (tmp != 'n')
 			{
 				// Could be a function or a variable name
@@ -220,10 +262,3 @@ struct token_base * next(lexer * l) {
 	return result;
 }
 
-void push_back(lexer * l, token_base * t)
-{
-	stack_base * s = (stack_base *) malloc(sizeof(stack_base));
-	s->token = t;
-	s->next = l->stack;
-	l->stack = s;
-}

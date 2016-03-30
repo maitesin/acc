@@ -12,11 +12,12 @@ typedef struct stack_base
 
 typedef struct lexer
 {
-	FILE * f;
+	char * f;
 	stack_base * stack;
+	size_t count;
 } lexer;
 
-void init_lexer(lexer * l, const char * filename);
+void init_lexer(lexer * l, char * code);
 void destroy_lexer(lexer * l);
 void free_stack_base(stack_base * b);
 struct token_base * next(lexer * l);

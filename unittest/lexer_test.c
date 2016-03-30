@@ -6,12 +6,15 @@
 
 void simple_file_only_main(void)
 {
-	const char * filename = "unittest/resources/simple_file_only_main.c";
+	char * code = "int main()\
+	{\
+		return 2;\
+	}";
 	lexer l;
 	token_base * token;
 
 	// Initialize lexer
-	init_lexer(&l, filename);
+	init_lexer(&l, code);
 
 	/*
 	 * Check that the tokens generated are the right ones
@@ -43,12 +46,15 @@ void simple_file_only_main(void)
 
 void push_token_to_stack(void)
 {
-	const char * filename = "unittest/resources/simple_file_only_main.c";
+	char * code = "int main()\
+	{\
+		return 2;\
+	}";
 	lexer l;
 	token_base * token;
 
 	// Init stuff
-	init_lexer(&l, filename);
+	init_lexer(&l, code);
 	token = (token_base *) malloc(sizeof(token_int_value));
 
 	// Check the stuff
@@ -62,13 +68,16 @@ void push_token_to_stack(void)
 
 void push_two_tokens_to_stack(void)
 {
-	const char * filename = "unittest/resources/simple_file_only_main.c";
+	char * code = "int main()\
+	{\
+		return 2;\
+	}";
 	lexer l;
 	token_base * token1;
 	token_base * token2;
 
 	// Init stuff
-	init_lexer(&l, filename);
+	init_lexer(&l, code);
 	token1 = (token_base *) malloc(sizeof(token_int_value));
 	token2 = (token_base *) malloc(sizeof(token_int_value));
 
@@ -86,13 +95,16 @@ void push_two_tokens_to_stack(void)
 
 void push_token_and_call_next(void)
 {
-	const char * filename = "unittest/resources/simple_file_only_main.c";
+	char * code = "int main()\
+	{\
+		return 2;\
+	}";
 	lexer l;
 	token_base * token;
 	token_base * received;
 
 	// Init stuff
-	init_lexer(&l, filename);
+	init_lexer(&l, code);
 	token = (token_base *) malloc(sizeof(token_int_value));
 
 	// Check the stuff
