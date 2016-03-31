@@ -33,6 +33,7 @@ enum boolean_operator_type {
 typedef struct ast_base
 {
 	enum ast_type type;
+	struct ast_base * next;
 } ast_base;
 
 typedef struct node_id
@@ -64,6 +65,8 @@ typedef struct node_if
 {
 	ast_base base;
 	ast_base * expression;
+	ast_base * i_body;
+	ast_base * e_body;
 } node_if;
 
 typedef struct node_boolean_operator
@@ -77,11 +80,14 @@ typedef struct node_boolean_operator
 /*
  * Init functions for the AST nodes
  */
+void init_ast_base(ast_base * base, enum ast_type type, ast_base * next);
+void init_ast_base_single(ast_base * base, enum ast_type type);
 void init_node_id(node_id * node, char * value);
 void init_node_int(node_int * node, int value);
 void init_node_function(node_function * node, char * name, ast_base * entry_point);
 void init_node_return(node_return * node, ast_base * value);
-void init_node_if(node_if * node, ast_base * expression);
+void init_node_if(node_if * node, ast_base * expression, ast_base * i_body,
+		  ast_base * e_body);
 void init_node_boolean_operator(node_boolean_operator * node, enum boolean_operator_type
 			   type, ast_base * first, ast_base * second);
 
