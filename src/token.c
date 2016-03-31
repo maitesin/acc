@@ -60,6 +60,11 @@ void init_token_if(token_if * token)
 	token->base.type = T_IF;
 }
 
+void init_token_else(token_else * token)
+{
+	token->base.type = T_ELSE;
+}
+
 void init_token_boolean_op(token_boolean_op * token, char * op)
 {
 	token->base.type = T_BOOLEAN_OP;
@@ -121,6 +126,11 @@ void free_token_eof(token_eof * token)
 }
 
 void free_token_if(token_if * token)
+{
+	free(token);
+}
+
+void free_token_else(token_else * token)
 {
 	free(token);
 }

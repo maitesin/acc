@@ -15,6 +15,7 @@ enum token_type {
 	T_SEMICOLON,
 	T_END_OF_FILE,
 	T_IF,
+	T_ELSE,
 	T_BOOLEAN_OP
 };
 
@@ -83,6 +84,11 @@ typedef struct token_if
 	token_base base;
 } token_if;
 
+typedef struct token_else
+{
+	token_base base;
+} token_else;
+
 typedef struct token_boolean_op
 {
 	token_base base;
@@ -103,6 +109,7 @@ void init_token_return(token_return * token);
 void init_token_semicolon(token_semicolon * token);
 void init_token_eof(token_eof * token);
 void init_token_if(token_if * token);
+void init_token_else(token_else * token);
 void init_token_boolean_op(token_boolean_op * token, char * op);
 
 /*
@@ -119,5 +126,6 @@ void free_token_return(token_return * token);
 void free_token_semicolon(token_semicolon * token);
 void free_token_eof(token_eof * token);
 void free_token_if(token_if * token);
+void free_token_else(token_else * token);
 void free_token_boolean_op(token_boolean_op * token);
 #endif //TOKEN_H
