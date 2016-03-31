@@ -53,7 +53,7 @@ ast_base * read_function_ast_node(grammar * g)
 	}
 	free_token_cpar((token_cpar *)token);
 
-	body = read_function_body(g);
+	body = read_body(g);
 	root = (ast_base *) malloc(sizeof(node_function));
 
 	init_node_function((node_function *)root, function_name->name, body);
@@ -61,9 +61,11 @@ ast_base * read_function_ast_node(grammar * g)
 	return root;
 }
 
-ast_base * read_function_body(grammar * g)
+ast_base * read_body(grammar * g)
 {
 	ast_base * root = NULL;
+	ast_base * tmp = NULL;
+	ast_base * iter = NULL;
 	token_base * token = NULL;
 
 	token = next(g->l);
@@ -79,14 +81,25 @@ ast_base * read_function_body(grammar * g)
 		switch (token->type) {
 			case T_RETURN:
 				free_token_return((token_return *)token);
-	            root = read_return_expression(g);
+	            tmp = read_return_expression(g);
 		        break;
 			case T_IF:
 				free_token_if((token_if *)token);
-	            root = read_if_statement(g);
+	            tmp = read_if_statement(g);
 		        break;
 			default:
-				return NULL;
+				push_back(g->l, token);
+				return root;
+		}
+		if (root != NULL)
+		{
+			iter->next = tmp;
+			iter = tmp;
+		}
+		else
+		{
+			root = tmp;
+			iter = tmp;
 		}
 		token = next(g->l);
     }
@@ -127,6 +140,9 @@ ast_base * read_return_expression(grammar * g)
 ast_base * read_if_statement(grammar * g)
 {
 	ast_base * root = NULL;
+	ast_base * expression = NULL;
+	ast_base * i_body = NULL;
+	ast_base * e_body = NULL;
 	token_base * token = NULL;
 
 	token = next(g->l);
@@ -136,15 +152,22 @@ ast_base * read_if_statement(grammar * g)
 	}
 	free_token_opar((token_opar *)token);
 
-	root = read_boolean_expression(g);
+	expression = read_boolean_expression(g);
+	i_body = read_body(g);
+
+	root = (ast_base *) malloc(sizeof(node_if));
 
 	token = next(g->l);
-	if (token->type != T_CPAR)
-	{
-		return NULL;
+	if (token->type == T_ELSE) {
+		free_token_else((token_else *)token);
+		e_body = read_body(g);
 	}
-	free_token_cpar((token_cpar *)token);
+	else
+	{
+		push_back(g->l, token);
+	}
 
+	init_node_if((node_if *)root, expression, i_body, e_body);
 	return root;
 }
 
@@ -230,7 +253,7 @@ ast_base * read_boolean_expression(grammar * g)
 
 ast_base * read_boolean_binary_expression(grammar * g)
 {
-	node_boolean_operator * root = NULL;
+	ast_base * root = NULL;
 	ast_base * tmp = NULL;
 	ast_base * first = NULL;
 	ast_base * second = NULL;
@@ -239,7 +262,7 @@ ast_base * read_boolean_binary_expression(grammar * g)
 	token_boolean_op * op = NULL;
 	enum boolean_operator_type op_type;
 
-	root = (node_boolean_operator *) malloc(sizeof(node_boolean_operator));
+	root = (ast_base *) malloc(sizeof(node_boolean_operator));
 
 	token = next(g->l);
 	if (token->type != T_INT_VALUE)
@@ -249,7 +272,7 @@ ast_base * read_boolean_binary_expression(grammar * g)
 			push_back(g->l, token);
 			return read_boolean_unary_expression(g);
 		}
-		free_node_boolean_operator(root);
+		free_node_boolean_operator((node_boolean_operator *)root);
 		return NULL;
 	}
 	int_value = (token_int_value *) token;
@@ -262,7 +285,7 @@ ast_base * read_boolean_binary_expression(grammar * g)
 	token = next(g->l);
 	if (token->type != T_BOOLEAN_OP)
 	{
-		free_node_boolean_operator(root);
+		free_node_boolean_operator((node_boolean_operator *)root);
 		return NULL;
 	}
 	op = (token_boolean_op *) token;
@@ -272,7 +295,7 @@ ast_base * read_boolean_binary_expression(grammar * g)
 	token = next(g->l);
 	if (token->type != T_INT_VALUE)
 	{
-		free_node_boolean_operator(root);
+		free_node_boolean_operator((node_boolean_operator *)root);
 		return NULL;
 	}
 	int_value = (token_int_value *) token;
@@ -281,13 +304,14 @@ ast_base * read_boolean_binary_expression(grammar * g)
 	free_token_int_value(int_value);
 
 	second = tmp;
-	init_node_boolean_operator(root, op_type, first, second);
-	return (ast_base *)root;
+	init_node_boolean_operator((node_boolean_operator *)root,
+							   op_type, first, second);
+	return root;
 }
 
 ast_base * read_boolean_unary_expression(grammar * g)
 {
-	node_boolean_operator * root = NULL;
+	ast_base * root = NULL;
 	ast_base * tmp = NULL;
 	ast_base * operand = NULL;
 	token_base * token = NULL;
@@ -295,12 +319,12 @@ ast_base * read_boolean_unary_expression(grammar * g)
 	token_boolean_op * op = NULL;
 	enum boolean_operator_type op_type;
 
-	root = (node_boolean_operator *) malloc(sizeof(node_boolean_operator));
+	root = (ast_base *) malloc(sizeof(node_boolean_operator));
 
 	token = next(g->l);
 	if (token->type != T_BOOLEAN_OP)
 	{
-		free_node_boolean_operator(root);
+		free_node_boolean_operator((node_boolean_operator *)root);
 		return NULL;
 	}
 	op = (token_boolean_op *) token;
@@ -310,7 +334,7 @@ ast_base * read_boolean_unary_expression(grammar * g)
 	token = next(g->l);
 	if (token->type != T_INT_VALUE)
 	{
-		free_node_boolean_operator(root);
+		free_node_boolean_operator((node_boolean_operator *)root);
 		return NULL;
 	}
 	int_value = (token_int_value *) token;
@@ -319,6 +343,7 @@ ast_base * read_boolean_unary_expression(grammar * g)
 	free_token_int_value(int_value);
 
 	operand = tmp;
-	init_node_boolean_operator(root, op_type, operand, NULL);
-	return (ast_base *)root;
+	init_node_boolean_operator((node_boolean_operator *)root,
+							   op_type, operand, NULL);
+	return root;
 }

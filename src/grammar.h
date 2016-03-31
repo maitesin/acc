@@ -20,7 +20,7 @@ void destroy_grammar(grammar * g);
  * Read functions to build AST parts
  */
 ast_base * read_function_ast_node(grammar * g);
-ast_base * read_function_body(grammar * g);
+ast_base * read_body(grammar * g);
 ast_base * read_return_expression(grammar * g);
 ast_base * read_if_statement(grammar * g);
 ast_base * read_boolean_expression(grammar * g);
