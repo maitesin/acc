@@ -4,40 +4,56 @@
 /*
  * Init functions implementation
  */
+void init_ast_base(ast_base * base, enum ast_type type, ast_base * next)
+{
+	base->type = type;
+	base->next = next;
+}
+
+void init_ast_base_single(ast_base * base, enum ast_type type)
+{
+	init_ast_base(base, type, NULL);
+}
+
 void init_node_id(node_id * node, char * value)
 {
-	node->base.type = A_ID;
+	init_ast_base_single(&node->base, A_ID);
 	node->value = value;
 }
 
 void init_node_int(node_int * node, int value)
 {
-	node->base.type = A_INT;
+
+	init_ast_base_single(&node->base, A_INT);
 	node->value = value;
 }
 
 void init_node_function(node_function * node, char * name, ast_base * entry)
 {
-	node->base.type = A_FUNCTION;
+	init_ast_base_single(&node->base, A_FUNCTION);
 	node->name = name;
 	node->entry_point = entry;
 }
 
 void init_node_return(node_return * node, ast_base * value)
 {
-	node->base.type = A_RETURN;
+	init_ast_base_single(&node->base, A_RETURN);
 	node->value = value;
 }
 
-void init_node_if(node_if * node, ast_base * expression)
+void init_node_if(node_if * node, ast_base * expression, ast_base * i_body,
+				  ast_base * e_body)
 {
-	node->base.type = A_IF;
+	init_ast_base_single(&node->base, A_IF);
 	node->expression = expression;
+	node->i_body = i_body;
+	node->e_body = e_body;
 }
 
 void init_node_boolean_operator(node_boolean_operator * node, enum boolean_operator_type
 			   type, ast_base * first, ast_base * second)
 {
+	init_ast_base_single(&node->base, A_ID);
 	node->base.type = A_BOOLEAN_OPERATOR;
 	node->oper = type;
 	node->first = first;
@@ -76,28 +92,48 @@ void free_node(ast_base * base)
 }
 void free_node_id(node_id * node)
 {
+	if (node->base.next != NULL) {
+		free_node(node->base.next);
+	}
 	free(node);
 }
 void free_node_int(node_int * node)
 {
+	if (node->base.next != NULL) {
+		free_node(node->base.next);
+	}
 	free(node);
 }
 void free_node_function(node_function * node)
 {
+	if (node->base.next != NULL) {
+		free_node(node->base.next);
+	}
 	free(node->name);
 	free(node);
 }
 void free_node_return(node_return * node)
 {
+	if (node->base.next != NULL) {
+		free_node(node->base.next);
+	}
 	free(node);
 }
 void free_node_if(node_if * node)
 {
+	if (node->base.next != NULL) {
+		free_node(node->base.next);
+	}
 	free_node(node->expression);
+	free_node(node->i_body);
+	free_node(node->e_body);
 	free(node);
 }
 void free_node_boolean_operator(node_boolean_operator * node)
 {
+	if (node->base.next != NULL) {
+		free_node(node->base.next);
+	}
 	free_node(node->first);
 	free_node(node->second);
 	free(node);
