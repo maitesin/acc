@@ -255,6 +255,30 @@ struct token_base * next(lexer * l)
 				malloc(sizeof(struct token_return));
 			init_token_return(result);
 			return result;
+		case 5:
+			if (tmp != 'l')
+			{
+				// Could be a function or a variable name
+				exit(EXIT_FAILURE);
+			}
+			buffer[pos++] = tmp;
+			tmp = get_char(l);
+			if (tmp != 's')
+			{
+				// Could be a function or a variable name
+				exit(EXIT_FAILURE);
+			}
+			buffer[pos++] = tmp;
+			tmp = get_char(l);
+			if (tmp != 'e')
+			{
+				// Could be a function or a variable name
+				exit(EXIT_FAILURE);
+			}
+			result = (struct token_else *)
+				malloc(sizeof(struct token_else));
+			init_token_else(result);
+			return result;
 		}
 	}
 	result = (struct token_eof *) malloc(sizeof(struct token_eof));
