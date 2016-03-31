@@ -148,6 +148,67 @@ struct token_base * next(lexer * l)
 				buffer[pos++] = tmp;
 				tmp = get_char(l);
 				state = 4;
+			} else if (tmp == '!')
+			{
+				buffer[pos++] = tmp;
+				tmp = get_char(l);
+				result = (struct token_boolean_op *)
+					malloc(sizeof(struct token_boolean_op));
+				if (tmp != '=')
+				{
+					push_back_one_char(l);
+					buff_copy = (char *) malloc(sizeof(char)*2);
+					buff_copy[0] = buffer[0];
+					buff_copy[1] = '\0';
+				}
+				else
+				{
+					buff_copy = (char *) malloc(sizeof(char)*3);
+					buff_copy[0] = buffer[0];
+					buff_copy[1] = tmp;
+					buff_copy[2] = '\0';
+				}
+				init_token_boolean_op(result, buff_copy);
+				return result;
+			} else if (tmp == '<' || tmp == '>')
+			{
+				buffer[pos++] = tmp;
+				tmp = get_char(l);
+				result = (struct token_boolean_op *)
+					malloc(sizeof(struct token_boolean_op));
+				if (tmp != '=')
+				{
+					push_back_one_char(l);
+					buff_copy = (char *) malloc(sizeof(char)*2);
+					buff_copy[0] = buffer[0];
+					buff_copy[1] = '\0';
+				}
+				else
+				{
+					buff_copy = (char *) malloc(sizeof(char)*3);
+					buff_copy[0] = buffer[0];
+					buff_copy[1] = tmp;
+					buff_copy[2] = '\0';
+				}
+				init_token_boolean_op(result, buff_copy);
+				return result;
+			} else if (tmp == '=')
+			{
+				buffer[pos++] = tmp;
+				tmp = get_char(l);
+				result = (struct token_boolean_op *)
+					malloc(sizeof(struct token_boolean_op));
+				if (tmp != '=')
+				{
+						// In the future this will mean we found an assignation
+						exit(EXIT_FAILURE);
+				}
+				buff_copy = (char *) malloc(sizeof(char)*3);
+				buff_copy[0] = buffer[0];
+				buff_copy[1] = tmp;
+				buff_copy[2] = '\0';
+				init_token_boolean_op(result, buff_copy);
+				return result;
 			}
 			break;
 		case 1:
@@ -188,6 +249,7 @@ struct token_base * next(lexer * l)
 					// Could be a function or a variable name
 					exit(EXIT_FAILURE);
 			}
+			break;
 		case 3:
 			if (tmp != 'a')
 			{
