@@ -144,13 +144,13 @@ enum boolean_operator_type get_boolean_op_value(token_boolean_op * token)
 	size_t len = strnlen(token->op,2);
 	if (len == 2)
 	{
-		if (strncmp(token->op, "==", 2))
+		if (strncmp(token->op, "==", 2) == 0)
 			return B_EQUALEQUAL;
-		else if (strncmp(token->op, "!=", 2))
+		else if (strncmp(token->op, "!=", 2) == 0)
 			return B_NOTEQUAL;
-		else if (strncmp(token->op, "<=", 2))
+		else if (strncmp(token->op, "<=", 2) == 0)
 			return B_LTEQUAL;
-		else if (strncmp(token->op, ">=", 2))
+		else if (strncmp(token->op, ">=", 2) == 0)
 			return B_GTEQUAL;
 		else
 		{
