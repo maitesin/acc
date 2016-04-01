@@ -86,7 +86,8 @@ void free_token_int_value(token_int_value * token)
 
 void free_token_function(token_function * token)
 {
-	free(token->name);
+	if (token->name != NULL)
+		free(token->name);
 	free(token);
 }
 
@@ -137,6 +138,7 @@ void free_token_else(token_else * token)
 
 void free_token_boolean_op(token_boolean_op * token)
 {
-	free(token->op);
+	if (token->op != NULL)
+		free(token->op);
 	free(token);
 }
