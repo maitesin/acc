@@ -181,8 +181,6 @@ ast_base * read_boolean_expression(grammar * g)
 	enum boolean_operator_type op;
 	int op_found = 0;
 
-	root = (ast_base *) malloc(sizeof(node_boolean_operator));
-
 	token = next(g->l);
 	while (token->type != T_CPAR)
 	{
@@ -316,7 +314,6 @@ ast_base * read_boolean_unary_expression(grammar * g)
 	ast_base * operand = NULL;
 	token_base * token = NULL;
 	token_int_value * int_value = NULL;
-	token_boolean_op * op = NULL;
 	enum boolean_operator_type op_type;
 
 	root = (ast_base *) malloc(sizeof(node_boolean_operator));
@@ -327,9 +324,8 @@ ast_base * read_boolean_unary_expression(grammar * g)
 		free_node_boolean_operator((node_boolean_operator *)root);
 		return NULL;
 	}
-	op = (token_boolean_op *) token;
-	op_type = get_boolean_op_value(op);
-	free_token_boolean_op(op);
+	op_type = get_boolean_op_value((token_boolean_op *) token);
+	free_token_boolean_op((token_boolean_op *) token);
 
 	token = next(g->l);
 	if (token->type != T_INT_VALUE)
