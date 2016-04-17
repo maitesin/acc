@@ -279,6 +279,83 @@ TEST_F(GrammarTest, if_else_statements)
 
 }
 
+TEST_F(GrammarTest, body_with_two_returns)
+{
+	lexer l;
+	grammar g;
+	token_base ** base;
+	ast_base * ret = NULL;
+	init_grammar(&g, &l);
+
+	// Init stuff
+	base = (token_base **) malloc(sizeof(token_base *) * 8);
+	base[0] = (token_base *) malloc(sizeof(token_obra));
+	init_token_obra((token_obra *) base[0]);
+    base[1] = (token_base *) malloc(sizeof(token_return));
+	init_token_return((token_return *) base[1]);
+	base[2] = (token_base *) malloc(sizeof(token_int_value));
+	init_token_int_value((token_int_value *) base[2], 1);
+	base[3] = (token_base *) malloc(sizeof(token_semicolon));
+	init_token_semicolon((token_semicolon *) base[3]);
+	base[4] = (token_base *) malloc(sizeof(token_return));
+	init_token_return((token_return *) base[4]);
+	base[5] = (token_base *) malloc(sizeof(token_int_value));
+	init_token_int_value((token_int_value *) base[5], 1);
+	base[6] = (token_base *) malloc(sizeof(token_semicolon));
+	init_token_semicolon((token_semicolon *) base[6]);
+	base[7] = (token_base *) malloc(sizeof(token_cbra));
+	init_token_cbra((token_cbra *) base[7]);
+
+	// Given
+	next_fake.return_val_seq = base;
+	next_fake.return_val_seq_len = 8;
+
+	// When
+	ret = read_body(&g);
+
+	// Then
+	assert(next_fake.call_count == 8);
+	assert(ret != NULL);
+	assert(ret->type == A_RETURN);
+    assert(ret->next == A_RETURN);
+    assert(ret->next->next == NULL);
+}
+
+TEST_F(GrammarTest, body_with_one_return)
+{
+	lexer l;
+	grammar g;
+	token_base ** base;
+	ast_base * ret = NULL;
+	init_grammar(&g, &l);
+
+	// Init stuff
+	base = (token_base **) malloc(sizeof(token_base *) * 5);
+	base[0] = (token_base *) malloc(sizeof(token_obra));
+	init_token_obra((token_obra *) base[0]);
+	base[1] = (token_base *) malloc(sizeof(token_return));
+	init_token_return((token_return *) base[1]);
+	base[2] = (token_base *) malloc(sizeof(token_int_value));
+	init_token_int_value((token_int_value *) base[2], 1);
+	base[3] = (token_base *) malloc(sizeof(token_semicolon));
+	init_token_semicolon((token_semicolon *) base[3]);
+	base[4] = (token_base *) malloc(sizeof(token_cbra));
+	init_token_cbra((token_cbra *) base[4]);
+
+	// Given
+	next_fake.return_val_seq = base;
+	next_fake.return_val_seq_len = 5;
+
+	// When
+	ret = read_body(&g);
+
+	// Then
+	assert(next_fake.call_count == 5);
+	assert(ret != NULL);
+	assert(ret->type == A_RETURN);
+    assert(ret->next == NULL);
+}
+
 TEST_F(GrammarTest, if_statement_inside_if_statement)
 {
 	lexer l;
@@ -445,6 +522,8 @@ int main()
 	RUN_TEST(GrammarTest, if_else_statements);
     RUN_TEST(GrammarTest, if_statement_inside_if_statement);
     RUN_TEST(GrammarTest, if_statement_inside_else_statement);
+    RUN_TEST(GrammarTest, body_with_one_return);
+    RUN_TEST(GrammarTest, body_with_two_returns);
 
 	printf("\n-------------\n");
 	printf("Complete\n");
