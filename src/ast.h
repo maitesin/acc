@@ -94,6 +94,7 @@ void init_node_boolean_operator(node_boolean_operator * node, enum boolean_opera
 /*
  * Release functions for the AST nodes
  */
+void free_ndoe(ast_base *);
 void free_node_id(node_id * node);
 void free_node_int(node_int * node);
 void free_node_function(node_function * node);
