@@ -44,6 +44,7 @@ void tearDown(void);
 //     - define UNITY_DOUBLE_PRECISION to specify the precision to use when doing TEST_ASSERT_EQUAL_DOUBLE
 //     - define UNITY_DOUBLE_TYPE to specify something other than double
 //     - define UNITY_DOUBLE_VERBOSE to print floating point values in errors (uses sprintf)
+//     - define UNITY_VERBOSE_NUMBER_MAX_LENGTH to change maximum length of printed numbers (used by sprintf)
 
 // Output
 //     - by default, Unity prints to standard out with putchar.  define UNITY_OUTPUT_CHAR(a) with a different function if desired
@@ -67,6 +68,10 @@ void tearDown(void);
 #define TEST_IGNORE_MESSAGE(message)                                                               UNITY_TEST_IGNORE(__LINE__, (message))
 #define TEST_IGNORE()                                                                              UNITY_TEST_IGNORE(__LINE__, NULL)
 #define TEST_ONLY()
+
+//It is not necessary for you to call PASS. A PASS condition is assumed if nothing fails.
+//This method allows you to abort a test immediately with a PASS state, ignoring the remainder of the test.
+#define TEST_PASS()                                                                                longjmp(Unity.AbortFrame, 1)
 
 //-------------------------------------------------------
 // Test Asserts (simple)
