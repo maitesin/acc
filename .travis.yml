@@ -20,8 +20,7 @@ after_success:
 
 env:
   global:
-    -secure: "HZCjWXn7h15iejoceZVE8Q"
-
+        - secure: "HGG7bzgbdhgwOiZQX9RywmBm+lMnzXUsNQFlPT/dQzg7zxup7NfnNjydbyKy7zvn5ioli8dlhqh7SR6g5gHBOaFZRXErbPiopyMQDJvm+FNIU6FyTzcYjzxyVwueDwDbgcGviF9rh/tkAuh2Qc2Jc84wnGp6KSJz+ettbAah4OkpYqfVz2eC92VlfiedwueR+F3J9F6phWWPbZVF+lJcYTqzN0TWo2VJWu53P++erMwz8rMTIz74S4h5MXnoul2MmgweKOm2/bmemQL+76we6gBsknidqU+mECyoJudI4rY/ZF+YFQFeMhcDr+B6JJSfRU/Qc0tEtqxX63XyxHoLGRi3B97acCTezTB5tfpuwYdrAXkDuceDStd8kd5hzRWFBYonb0UzLCCJMvucYQKOe6xChc+bScdllxLLqHqWeFd8DVN0hjueFvipEEie9mr+GTs9m/36o+7Vu7/Zm/N0MZu2P8NHcgaNJAbzmXepsO7HnniXF8WVgjteR1w9Aft+57R5Z2HbqtKKLCcQEiG2NaukrXOaVYUOy5qYSyLN9Z+C6mn+RwjZvFnL1x2Ze1P0FMkHSCliDsMI8V/PsAf9CLTHzWjnFU5th7bH6s/eehcCyBONyOVC9NJXl8HzLfAbyh7yGjjaih1zK3EdiNuaqfSZc6BzsdiERb8KUx1JDzU="
 addons:
   coverity_scan:
 
