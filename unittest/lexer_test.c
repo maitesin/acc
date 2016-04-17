@@ -282,7 +282,6 @@ void read_token_int_type(void)
 	destroy_lexer(&l);
 }
 
-
 void read_token_int_value(void)
 {
 	char * code = "1234";
@@ -299,7 +298,6 @@ void read_token_int_value(void)
 	// Destroy stuff
 	destroy_lexer(&l);
 }
-
 
 void read_token_function(void)
 {
@@ -318,7 +316,6 @@ void read_token_function(void)
 	destroy_lexer(&l);
 }
 
-
 void read_token_opar(void)
 {
 	char * code = "(";
@@ -336,7 +333,6 @@ void read_token_opar(void)
 	destroy_lexer(&l);
 }
 
-
 void read_token_cpar(void)
 {
 	char * code = ")";
@@ -353,7 +349,6 @@ void read_token_cpar(void)
 	// Destroy stuff
 	destroy_lexer(&l);
 }
-
 
 void read_token_obra(void)
 {
@@ -390,7 +385,6 @@ void read_token_cbra(void)
 	destroy_lexer(&l);
 }
 
-
 void read_token_return(void)
 {
 	char * code = "return";
@@ -407,7 +401,6 @@ void read_token_return(void)
 	// Destroy stuff
 	destroy_lexer(&l);
 }
-
 
 void read_token_semicolon(void)
 {
@@ -426,7 +419,6 @@ void read_token_semicolon(void)
 	destroy_lexer(&l);
 }
 
-
 void read_token_eof(void)
 {
 	char * code = "";
@@ -443,7 +435,6 @@ void read_token_eof(void)
 	// Destroy stuff
 	destroy_lexer(&l);
 }
-
 
 void read_token_if(void)
 {
