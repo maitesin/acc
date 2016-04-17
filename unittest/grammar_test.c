@@ -182,22 +182,120 @@ TEST_F(GrammarTest, boolean_unary_operator_is_read_properly)
 	assert(node->second == NULL);
 }
 
+TEST_F(GrammarTest, if_statement_only)
+{
+	lexer l;
+	grammar g;
+	token_base ** base;
+	ast_base * ret = NULL;
+	init_grammar(&g, &l);
+	char * op = (char *) malloc(sizeof(char)*3);
+	op[0] = '!';
+	op[1] = '=';
+	op[2] = '\0';
+
+	// Init stuff
+	base = (token_base **) malloc(sizeof(token_base *) * 9);
+	base[0] = (token_base *) malloc(sizeof(token_opar));
+	init_token_opar((token_opar *) base[0]);
+	base[1] = (token_base *) malloc(sizeof(token_int_value));
+	init_token_int_value((token_int_value *) base[1], 1);
+	base[2] = (token_base *) malloc(sizeof(token_int_value));
+	init_token_int_value((token_int_value *) base[2], 1);
+	base[3] = (token_base *) malloc(sizeof(token_boolean_op));
+	init_token_boolean_op((token_boolean_op *) base[3], op);
+	base[4] = (token_base *) malloc(sizeof(token_int_value));
+	init_token_int_value((token_int_value *) base[4], 1);
+	base[5] = (token_base *) malloc(sizeof(token_cpar));
+	init_token_cpar((token_cpar *) base[5]);
+	base[6] = (token_base *) malloc(sizeof(token_obra));
+	init_token_obra((token_obra *) base[6]);
+	base[7] = (token_base *) malloc(sizeof(token_cbra));
+	init_token_cbra((token_cbra *) base[7]);
+	base[8] = (token_base *) malloc(sizeof(token_eof));
+	init_token_eof((token_eof *) base[8]);
+
+	// Given
+	next_fake.return_val_seq = base;
+	next_fake.return_val_seq_len = 9;
+
+	// When
+	ret = read_if_statement(&g);
+
+	// Then
+	assert(next_fake.call_count == 9);
+	assert(ret != NULL);
+	assert(ret->type == A_IF);
+}
+
+TEST_F(GrammarTest, if_else_statements)
+{
+	lexer l;
+	grammar g;
+	token_base ** base;
+	ast_base * ret = NULL;
+	init_grammar(&g, &l);
+	char * op = (char *) malloc(sizeof(char)*3);
+	op[0] = '!';
+	op[1] = '=';
+	op[2] = '\0';
+
+	// Init stuff
+	base = (token_base **) malloc(sizeof(token_base *) * 11);
+	base[0] = (token_base *) malloc(sizeof(token_opar));
+	init_token_opar((token_opar *) base[0]);
+	base[1] = (token_base *) malloc(sizeof(token_int_value));
+	init_token_int_value((token_int_value *) base[1], 1);
+	base[2] = (token_base *) malloc(sizeof(token_int_value));
+	init_token_int_value((token_int_value *) base[2], 1);
+	base[3] = (token_base *) malloc(sizeof(token_boolean_op));
+	init_token_boolean_op((token_boolean_op *) base[3], op);
+	base[4] = (token_base *) malloc(sizeof(token_int_value));
+	init_token_int_value((token_int_value *) base[4], 1);
+	base[5] = (token_base *) malloc(sizeof(token_cpar));
+	init_token_cpar((token_cpar *) base[5]);
+	base[6] = (token_base *) malloc(sizeof(token_obra));
+	init_token_obra((token_obra *) base[6]);
+	base[7] = (token_base *) malloc(sizeof(token_cbra));
+	init_token_cbra((token_cbra *) base[7]);
+	base[8] = (token_base *) malloc(sizeof(token_else));
+	init_token_else((token_else *) base[8]);
+	base[9] = (token_base *) malloc(sizeof(token_obra));
+	init_token_obra((token_obra *) base[9]);
+	base[10] = (token_base *) malloc(sizeof(token_cbra));
+	init_token_cbra((token_cbra *) base[10]);
+
+	// Given
+	next_fake.return_val_seq = base;
+	next_fake.return_val_seq_len = 11;
+
+	// When
+	ret = read_if_statement(&g);
+
+	// Then
+	assert(next_fake.call_count == 11);
+	assert(ret != NULL);
+	assert(ret->type == A_IF);
+
+}
 int main()
 {
 	setbuf(stdout, NULL);
 	fprintf(stdout, "-------------\n");
 	fprintf(stdout, "Running Tests\n");
 	fprintf(stdout, "-------------\n\n");
-    fflush(0);
+	fflush(0);
 
 	RUN_TEST(GrammarTest, no_int_as_first_stuff);
 	RUN_TEST(GrammarTest, int_but_not_followed_by_function);
 	RUN_TEST(GrammarTest, boolean_unary_operator_is_read_properly);
 	RUN_TEST(GrammarTest, boolean_binary_operator_is_read_properly);
 	RUN_TEST(GrammarTest, boolean_expression_is_read_properly);
+	RUN_TEST(GrammarTest, if_statement_only);
+	RUN_TEST(GrammarTest, if_else_statements);
 
 	printf("\n-------------\n");
-    printf("Complete\n");
+	printf("Complete\n");
 	printf("-------------\n\n");
 
 	return 0;
