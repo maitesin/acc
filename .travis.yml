@@ -18,6 +18,9 @@ after_success:
 - make test
 - coveralls --exclude "CMakeFiles" --include "src" --gcov-options '\-lp' --gcov 'gcov-4.9' 
 
+env:
+  -secure: "HZCjWXn7h15iejoceZVE8Q"
+
 addons:
   coverity_scan:
     # GitHub project metadata
