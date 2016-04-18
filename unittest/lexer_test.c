@@ -521,6 +521,40 @@ void read_token_lessequalthan(void)
 	destroy_lexer(&l);
 }
 
+void read_token_oror(void)
+{
+	char * code = "||";
+	lexer l;
+	token_base * token;
+
+	// Init stuff
+	init_lexer(&l, code);
+
+	// Check the stuff
+	token = next(&l);
+	TEST_ASSERT_EQUAL(T_BOOLEAN_OP, token->type);
+
+	// Destroy stuff
+	destroy_lexer(&l);
+}
+
+void read_token_andand(void)
+{
+	char * code = "&&";
+	lexer l;
+	token_base * token;
+
+	// Init stuff
+	init_lexer(&l, code);
+
+	// Check the stuff
+	token = next(&l);
+	TEST_ASSERT_EQUAL(T_BOOLEAN_OP, token->type);
+
+	// Destroy stuff
+	destroy_lexer(&l);
+}
+
 void read_token_greaterequalthan(void)
 {
 	char * code = ">=";
@@ -614,6 +648,8 @@ int main(void)
 	RUN_TEST(read_token_notequal);
 	RUN_TEST(read_token_lessequalthan);
 	RUN_TEST(read_token_greaterequalthan);
+    RUN_TEST(read_token_oror);
+    RUN_TEST(read_token_andand);
 	RUN_TEST(read_token_lessthan);
 	RUN_TEST(read_token_greaterthan);
 	RUN_TEST(read_token_not);
