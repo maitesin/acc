@@ -209,7 +209,45 @@ struct token_base * next(lexer * l)
 				buff_copy[2] = '\0';
 				init_token_boolean_op(result, buff_copy);
 				return result;
-			}
+			} else if (tmp == '|')
+            {
+                buffer[pos++] = tmp;
+                tmp = get_char(l);
+                result = (struct token_boolean_op *)
+                    malloc(sizeof(struct token_boolean_op));
+                if (tmp != '|')
+                {
+                        // In the future this will mean we found a bit-wise op
+                        exit(EXIT_FAILURE);
+                }
+                buff_copy = (char *) malloc(sizeof(char)*3);
+                buff_copy[0] = buffer[0];
+                buff_copy[1] = tmp;
+                buff_copy[2] = '\0';
+                init_token_boolean_op(result, buff_copy);
+                return result;
+            } else if (tmp == '&')
+            {
+                buffer[pos++] = tmp;
+                tmp = get_char(l);
+                result = (struct token_boolean_op *)
+                    malloc(sizeof(struct token_boolean_op));
+                if (tmp != '&')
+                {
+                        // In the future this will mean we found an address
+                        exit(EXIT_FAILURE);
+                }
+                buff_copy = (char *) malloc(sizeof(char)*3);
+                buff_copy[0] = buffer[0];
+                buff_copy[1] = tmp;
+                buff_copy[2] = '\0';
+                init_token_boolean_op(result, buff_copy);
+                return result;
+            } else
+            {
+                fprintf(stderr, "%c not found as a valid starting token\n", tmp);
+                exit(EXIT_FAILURE);
+            }
 			break;
 		case 1:
 			// Find the whole number
