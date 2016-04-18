@@ -7,6 +7,7 @@ void init_generator(generator * gen, grammar * gra, const char * out)
 {
 	gen->g = gra;
 	gen->f = fopen(out, "w");
+    gen->if_num = 0LLU;
 }
 
 void destroy_generator(generator * g)
@@ -44,20 +45,27 @@ void __generate_code_for_main(generator * g, ast_base * ast)
 
 void __generate_code_for_function(generator * g, node_function * ast)
 {
-	ast_base * body = ast->entry_point;
-
 	fprintf(g->f, "%s:\n", ast->name);
-	switch(body->type)
-	{
-		case A_RETURN:
-			__generate_code_for_return(g, (node_return *)body);
-			free_node_return((node_return *)body);
-			break;
-		default:
-			//This is an error!
-			fprintf(stderr, "Invalid stuff for the AST to have inside a function\n");
-			exit(EXIT_FAILURE);
-	}
+    __generate_code_for_body(g, ast->entry_point);
+}
+
+void __generate_code_for_if(generator * g, node_if * ast)
+{
+    unsigned long long int if_num = g->if_num;
+    g->if_num++;
+    // Expression
+    __generate_code_for_expression(g, ast->expression);
+    // If body
+    fprintf(g->f, "if_if_%llu:\n", if_num);
+    __generate_code_for_body(g, ast->i_body);
+    if (ast->e_body != NULL)
+    {
+        // Else body
+        fprintf(g->f, "if_else_%llu:\n", if_num);
+        __generate_code_for_body(g, ast->e_body);
+    }
+    // End of if_else
+    fprintf(g->f, "if_end_%llu:\n", g->if_num);
 }
 
 void __generate_code_for_return(generator * g, node_return * ast)
@@ -82,4 +90,33 @@ void __generate_code_for_return(generator * g, node_return * ast)
 void __generate_code_for_int(generator * g, node_int * ast)
 {
 	fprintf(g->f, "#%d", ast->value);
+}
+
+void __generate_code_for_expression(generator * g, ast_base * ast)
+{
+
+}
+
+void __generate_code_for_body(generator * g, ast_base * body)
+{
+    while (body != NULL)
+    {
+        tmp = body;
+        body = body->next;
+	    switch(body->type)
+    	{
+    	    case A_RETURN:
+	    	    __generate_code_for_return(g, (node_return *)tmp);
+                free_node_return((node_return *)tmp);
+    		    break;
+            case A_IF:
+                __generate_code_for_if(g, (node_if *)tmp);
+                free_node_if((node_if *)tmp);
+                break;
+    	    default:
+	    	    //This is an error!
+		    	fprintf(stderr, "Invalid stuff for the AST to have inside a function\n");
+    		    exit(EXIT_FAILURE);
+	    }
+    }
 }
