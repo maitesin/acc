@@ -152,6 +152,10 @@ enum boolean_operator_type get_boolean_op_value(token_boolean_op * token)
 			return B_LTEQUAL;
 		else if (strncmp(token->op, ">=", 2) == 0)
 			return B_GTEQUAL;
+        else if (strncmp(token->op, "||", 2) == 0)
+            return B_OROR;
+        else if (strncmp(token->op, "&&", 2) == 0)
+            return B_ANDAND;
 		else
 		{
 			fprintf(stderr, "Error, %s cannot be proccessed as a boolean operator\n", token->op);

@@ -22,6 +22,8 @@ enum boolean_operator_type {
 	B_NOTEQUAL,
 	B_LTEQUAL,
 	B_GTEQUAL,
+    B_OROR,
+    B_ANDAND,
 	B_LT,
 	B_GT,
 	B_NOT
