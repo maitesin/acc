@@ -18,7 +18,7 @@ void destroy_generator(generator * g)
 void generate_code(generator * g)
 {
 	ast_base * ast = NULL;
-	ast = read_function_ast_node(g->g);
+	ast = build_ast(g->g);
 	__generate_code(g, ast);
 }
 
