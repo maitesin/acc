@@ -20,6 +20,7 @@ void generate_code(generator * g)
 	ast_base * ast = NULL;
 	ast = build_ast(g->g);
 	__generate_code(g, ast);
+	free_node(ast);
 }
 
 void __generate_code(generator * g, ast_base * ast)
@@ -34,7 +35,6 @@ void __generate_code_for_main(generator * g, ast_base * ast)
 	{
 		case A_FUNCTION:
 			__generate_code_for_function(g, (node_function *)ast);
-			free_node_function((node_function *)ast);
 			break;
 		default:
 			//This is an error!
@@ -57,7 +57,7 @@ void __generate_code_for_if(generator * g, node_if * ast)
     __generate_code_for_if_expression(g, ast->expression, if_num);
     // If body
     __generate_code_for_body(g, ast->i_body);
-	fprintf(g->f, "if_else_%llu:\n", g->if_num);
+	fprintf(g->f, "if_else_%llu:\n", if_num);
     if (ast->e_body != NULL)
     {
         // Else body
@@ -74,7 +74,6 @@ void __generate_code_for_return(generator * g, node_return * ast)
 	{
 		case A_INT:
 			__generate_code_for_int(g, (node_int *)return_value);
-			free_node_int((node_int *)return_value);
 			break;
 		default:
 			//This is an error!
@@ -113,13 +112,13 @@ void __generate_code_for_binary_boolean_expression(generator * g,
 	// Load first operand in r0
 	fprintf(g->f, "\tmov r0, ");
 	__generate_code_for_int(g, first);
-	free_node_int(first);
+	fprintf(g->f, "\n");
 	// Load first operand in r1
 	fprintf(g->f, "\tmov r1, ");
 	__generate_code_for_int(g, second);
-	free_node_int(second);
+	fprintf(g->f, "\n");
 	// Compare values
-	fprintf(g->f, "\tcmp r0, r1");
+	fprintf(g->f, "\tcmp r0, r1\n");
 
 	switch(op->oper)
 		{
@@ -151,7 +150,6 @@ void __generate_code_for_binary_boolean_expression(generator * g,
 				fprintf(stderr, "Invalid unary boolean operator\n");
 				exit(EXIT_FAILURE);
 	}
-	free_node_boolean_operator(op);
 }
 
 void __generate_code_for_unary_boolean_expression(generator * g,
@@ -162,7 +160,6 @@ void __generate_code_for_unary_boolean_expression(generator * g,
 	fprintf(g->f, "\tmov r0, #0");
 	fprintf(g->f, "\tmov r1, ");
 	__generate_code_for_int(g, first);
-	free_node_int(first);
 	switch(op->oper)
 	{
 		case B_NOT:
@@ -185,11 +182,9 @@ void __generate_code_for_body(generator * g, ast_base * body)
 		{
 		    case A_RETURN:
 			    __generate_code_for_return(g, (node_return *)tmp);
-                free_node_return((node_return *)tmp);
 			    break;
             case A_IF:
                 __generate_code_for_if(g, (node_if *)tmp);
-                free_node_if((node_if *)tmp);
                 break;
 		    default:
 			    //This is an error!
