@@ -99,11 +99,12 @@ void __generate_code_for_expression(generator * g, ast_base * ast)
 
 void __generate_code_for_body(generator * g, ast_base * body)
 {
+	ast_base * tmp = NULL;
     while (body != NULL)
     {
         tmp = body;
         body = body->next;
-	    switch(body->type)
+	    switch(tmp->type)
     	{
     	    case A_RETURN:
 	    	    __generate_code_for_return(g, (node_return *)tmp);
