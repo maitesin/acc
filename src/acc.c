@@ -21,7 +21,7 @@ char * load_file(const char * filename)
 				fprintf(stderr, "Error, not able to calculate the size of the file \n");
 				exit(EXIT_FAILURE);
 			}
-			b = (char *) malloc(sizeof(char) * s);
+			b = (char *) malloc(sizeof(char) * s + 1);
 			if (fseek(f, 0L, SEEK_SET) != 0)
 			{
 				fprintf(stderr, "Error, not got back to the beginning of the file\n");
