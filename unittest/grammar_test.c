@@ -317,7 +317,7 @@ TEST_F(GrammarTest, body_with_two_returns)
 	assert(next_fake.call_count == 8);
 	assert(ret != NULL);
 	assert(ret->type == A_RETURN);
-    assert(ret->next == A_RETURN);
+    assert(ret->next->type == A_RETURN);
     assert(ret->next->next == NULL);
 }
 

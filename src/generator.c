@@ -54,18 +54,15 @@ void __generate_code_for_if(generator * g, node_if * ast)
     unsigned long long int if_num = g->if_num;
     g->if_num++;
     // Expression
-    __generate_code_for_expression(g, ast->expression);
+    __generate_code_for_if_expression(g, ast->expression, if_num);
     // If body
-    fprintf(g->f, "if_if_%llu:\n", if_num);
     __generate_code_for_body(g, ast->i_body);
+	fprintf(g->f, "if_else_%llu:\n", g->if_num);
     if (ast->e_body != NULL)
     {
         // Else body
-        fprintf(g->f, "if_else_%llu:\n", if_num);
         __generate_code_for_body(g, ast->e_body);
     }
-    // End of if_else
-    fprintf(g->f, "if_end_%llu:\n", g->if_num);
 }
 
 void __generate_code_for_return(generator * g, node_return * ast)
@@ -92,9 +89,89 @@ void __generate_code_for_int(generator * g, node_int * ast)
 	fprintf(g->f, "#%d", ast->value);
 }
 
-void __generate_code_for_expression(generator * g, ast_base * ast)
+void __generate_code_for_if_expression(generator * g, ast_base * ast,
+									   unsigned long long int if_num)
 {
+	struct node_boolean_operator * op = (struct node_boolean_operator *) ast;
+	switch(op->oper)
+	{
+		case B_NOT:
+			__generate_code_for_unary_boolean_expression(g, op, if_num);
+			break;
+		default:
+			__generate_code_for_binary_boolean_expression(g, op, if_num);
+	}
+}
 
+void __generate_code_for_binary_boolean_expression(generator * g,
+											node_boolean_operator * op,
+											unsigned long long int if_num)
+{
+	// Get both operands
+	node_int * first = (node_int *) op->first;
+	node_int * second = (node_int *) op->second;
+	// Load first operand in r0
+	fprintf(g->f, "\tmov r0, ");
+	__generate_code_for_int(g, first);
+	free_node_int(first);
+	// Load first operand in r1
+	fprintf(g->f, "\tmov r1, ");
+	__generate_code_for_int(g, second);
+	free_node_int(second);
+	// Compare values
+	fprintf(g->f, "\tcmp r0, r1");
+
+	switch(op->oper)
+		{
+			case B_EQUALEQUAL:
+				fprintf(g->f, "\tbne if_else_%llu\n", if_num);
+				break;
+			case B_NOTEQUAL:
+				fprintf(g->f, "\tbeq if_else_%llu\n", if_num);
+				break;
+			case B_LTEQUAL:
+				fprintf(g->f, "\tbgt if_else_%llu\n", if_num);
+				break;
+			case B_GTEQUAL:
+				fprintf(g->f, "\tblt if_else_%llu\n", if_num);
+				break;
+			case B_OROR:
+				// TODO
+				break;
+			case B_ANDAND:
+				// TODO
+				break;
+			case B_LT:
+				fprintf(g->f, "\tbge if_else_%llu\n", if_num);
+				break;
+			case B_GT:
+				fprintf(g->f, "\tble if_else_%llu\n", if_num);
+				break;
+			default:
+				fprintf(stderr, "Invalid unary boolean operator\n");
+				exit(EXIT_FAILURE);
+	}
+	free_node_boolean_operator(op);
+}
+
+void __generate_code_for_unary_boolean_expression(generator * g,
+											node_boolean_operator * op,
+											unsigned long long int if_num)
+{
+	node_int * first = (node_int *) op->first;
+	fprintf(g->f, "\tmov r0, #0");
+	fprintf(g->f, "\tmov r1, ");
+	__generate_code_for_int(g, first);
+	free_node_int(first);
+	switch(op->oper)
+	{
+		case B_NOT:
+			fprintf(g->f, "\tbeq if_else_%llu\n", if_num);
+			break;
+		default:
+			fprintf(stderr, "Invalid unary boolean operator\n");
+			exit(EXIT_FAILURE);
+	}
 }
 
 void __generate_code_for_body(generator * g, ast_base * body)
@@ -105,19 +182,19 @@ void __generate_code_for_body(generator * g, ast_base * body)
         tmp = body;
         body = body->next;
 	    switch(tmp->type)
-    	{
-    	    case A_RETURN:
-	    	    __generate_code_for_return(g, (node_return *)tmp);
+		{
+		    case A_RETURN:
+			    __generate_code_for_return(g, (node_return *)tmp);
                 free_node_return((node_return *)tmp);
-    		    break;
+			    break;
             case A_IF:
                 __generate_code_for_if(g, (node_if *)tmp);
                 free_node_if((node_if *)tmp);
                 break;
-    	    default:
-	    	    //This is an error!
-		    	fprintf(stderr, "Invalid stuff for the AST to have inside a function\n");
-    		    exit(EXIT_FAILURE);
+		    default:
+			    //This is an error!
+				fprintf(stderr, "Invalid stuff for the AST to have inside a function\n");
+			    exit(EXIT_FAILURE);
 	    }
     }
 }

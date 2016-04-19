@@ -23,7 +23,14 @@ void __generate_code_for_function(generator * g, node_function * ast);
 void __generate_code_for_return(generator * g, node_return * ast);
 void __generate_code_for_int(generator * g, node_int * ast);
 void __generate_code_for_if(generator * g, node_if * ast);
-void __generate_code_for_expression(generator * g, ast_base * ast);
+void __generate_code_for_if_expression(generator * g, ast_base * ast,
+				       unsigned long long int if_num);
+void __generate_code_for_binary_boolean_expression(generator * g,
+					node_boolean_operator * op,
+					unsigned long long int if_num);
+void __generate_code_for_unary_boolean_expression(generator * g,
+					node_boolean_operator * op,
+					unsigned long long int if_num);
 void __generate_code_for_body(generator * g, ast_base * body);
 
 #endif //GENERATOR_H
