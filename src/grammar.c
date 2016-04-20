@@ -173,9 +173,6 @@ ast_base * read_if_statement(grammar * g)
 ast_base * read_boolean_expression(grammar * g)
 {
 	ast_base * root = NULL;
-	ast_base * tmp = NULL;
-	ast_base * first = NULL;
-	ast_base * second = NULL;
 	token_base * token = NULL;
 	enum boolean_operator_type op;
 	int op_found = 0;
@@ -187,55 +184,14 @@ ast_base * read_boolean_expression(grammar * g)
 		{
 			case T_INT_VALUE:
 				push_back(g->l, token);
-				if (root == NULL)
-				{
-					root = read_boolean_binary_expression(g);
-				}
-				else
-				{
-					if (op_found)
-					{
-						tmp = read_boolean_binary_expression(g);
-						first = root;
-						second = tmp;
-						root = (ast_base *) malloc(sizeof(node_boolean_operator));
-						init_node_boolean_operator((node_boolean_operator *)root, op, first, second);
-						op_found = 0;
-					}
-					else
-					{
-						fprintf(stderr, "Error during read_boolean_expression with int value:%d\n", ((token_int_value *)token)->value);
-						exit(EXIT_FAILURE);
-					}
-				}
+				root = read_single_boolean_expression(g, root, &op_found, op);
 				break;
 			case T_BOOLEAN_OP:
 				op = get_boolean_op_value((token_boolean_op *)token);
 				op_found = 1;
 				break;
 			case T_OPAR:
-				tmp = read_boolean_expression(g);
-				if (root == NULL)
-				{
-					root = tmp;
-				}
-				else
-				{
-					if (op_found)
-					{
-						tmp = read_boolean_binary_expression(g);
-						first = root;
-						second = tmp;
-						root = (ast_base *) malloc(sizeof(node_boolean_operator));
-						init_node_boolean_operator((node_boolean_operator *)root, op, first, second);
-						op_found = 0;
-					}
-					else
-					{
-						fprintf(stderr, "Error during read_boolean_expression\n");
-						exit(EXIT_FAILURE);
-					}
-				}
+				root = read_single_boolean_expression(g, root, &op_found, op);
 				break;
 			default:
 				fprintf(stderr, "Error reading boolean expression\n");
@@ -244,6 +200,42 @@ ast_base * read_boolean_expression(grammar * g)
 		token = next(g->l);
 	}
 	free_token_cpar((token_cpar *)token);
+	return root;
+}
+
+ast_base * read_single_boolean_expression(grammar * g, ast_base * r,
+										  int * op_found,
+										  enum boolean_operator_type op)
+{
+	token_base * token = NULL;
+	ast_base * root = NULL;
+	ast_base * tmp = NULL;
+	ast_base * first = NULL;
+	ast_base * second = NULL;
+
+	if (r == NULL) {
+		root = read_boolean_binary_expression(g);
+	}
+	else
+	{
+		if (*op_found)
+		{
+			tmp = read_boolean_binary_expression(g);
+			first = root;
+			second = tmp;
+			root = (ast_base *)malloc(sizeof(node_boolean_operator));
+			init_node_boolean_operator((node_boolean_operator *)root, op, first,
+			                             second);
+			*op_found = 0;
+	    }
+		else
+		{
+			fprintf(stderr,
+			      "Error during read_boolean_expression with int value:%d\n",
+				  ((token_int_value *)token)->value);
+			exit(EXIT_FAILURE);
+		}
+	}
 	return root;
 }
 
