@@ -187,10 +187,9 @@ ast_base * read_boolean_expression(grammar * g)
 		{
 			case T_INT_VALUE:
 				push_back(g->l, token);
-				tmp = read_boolean_binary_expression(g);
 				if (root == NULL)
 				{
-					root = tmp;
+					root = read_boolean_binary_expression(g);
 				}
 				else
 				{
