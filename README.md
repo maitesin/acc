@@ -29,6 +29,40 @@ B -> I < I
 
 # Example
 C code:
-<script src="https://gist.github.com/maitesin/05afafa443c41042078448efe9c42367.js"></script>
+```c
+int main()
+{
+    if (1 < 2)
+    {
+	    if (4 > 10)
+	    {
+		return 1;
+	    }
+	    else {
+		return 2;
+	    }
+    }
+    return 0;
+```
 Assembly generated:
-<script src="https://gist.github.com/maitesin/e2a261eefda5862da26f8e7402a3109d.js"></script>
+```asm
+	.text
+	.global main
+main:
+	mov r0, #1
+	mov r1, #2
+	cmp r0, r1
+	bge if_else_0
+	mov r0, #4
+	mov r1, #10
+	cmp r0, r1
+	ble if_else_1
+	mov r0, #1
+	bx lr
+if_else_1:
+	mov r0, #2
+	bx lr
+if_else_0:
+	mov r0, #0
+	bx lr
+```
