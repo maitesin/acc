@@ -43,6 +43,7 @@ int main()
 	    }
     }
     return 0;
+}
 ```
 Assembly generated:
 ```asm
