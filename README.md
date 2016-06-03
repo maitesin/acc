@@ -26,3 +26,9 @@ B -> I < I
      | ! B
      | "(" B ")"
 ```
+
+# Example
+C code:
+<script src="https://gist.github.com/maitesin/05afafa443c41042078448efe9c42367.js"></script>
+Assembly generated:
+<script src="https://gist.github.com/maitesin/e2a261eefda5862da26f8e7402a3109d.js"></script>
