@@ -7,3 +7,22 @@
 
 
 **ACC** is a project that its only aim is to improve my knowledge of two topics, C language and ARM assembly. I think this is a good exercise to go deep into both topics.
+
+# Parser
+The **ACC** is a **LALR(1) parser**, that means it is a [**Look-Ahead Left-to-Right parser**](https://en.wikipedia.org/wiki/LALR_parser).
+
+# Grammar
+```
+S -> int main "(" ")" "{" E "}"
+E -> return I;
+     | if "(" B ")" "{" E "}"
+     | if "(" B ")" "{" E "}" else "{" E "}"
+I -> [0-9]+
+B -> I < I
+     | I <= I
+     | I == I
+     | I >= I
+     | I > I
+     | ! B
+     | "(" B ")"
+```
