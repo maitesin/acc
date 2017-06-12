@@ -55,7 +55,7 @@ int my_main(const char * file_input, const char * file_output)
 	init_generator(&gen, &gra, file_output);
 	// Do the magic stuff
 	generate_code(&gen);
-	// Release stuff adquired from the lexer, the grammar and the generator
+	// Release stuff acquired from the lexer, the grammar and the generator
 	destroy_generator(&gen);
 	destroy_grammar(&gra);
 	destroy_lexer(&lex);
