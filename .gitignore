@@ -21,10 +21,4 @@
 tags
 
 # Stuff to avoid the cmake stuff
-**/CMakeFiles
-**/CMakeCache.txt
-**/bin
-**/conaninfo.txt
-**/*.cmake
-**/Makefile
-**/Testing
+build

@@ -3,44 +3,7 @@ compiler:
 - gcc
 - clang
 
-install:
-- sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-- sudo apt-get update -qq
-- sudo apt-get install -qq g++-4.9
-- sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.9
-
 script:
-- cmake .
-- make
-- make test
-- gcov src/*
-
-after_success:
-- bash <(curl -s https://codecov.io/bash)
-
-env:
-  global:
-        - secure: "HGG7bzgbdhgwOiZQX9RywmBm+lMnzXUsNQFlPT/dQzg7zxup7NfnNjydbyKy7zvn5ioli8dlhqh7SR6g5gHBOaFZRXErbPiopyMQDJvm+FNIU6FyTzcYjzxyVwueDwDbgcGviF9rh/tkAuh2Qc2Jc84wnGp6KSJz+ettbAah4OkpYqfVz2eC92VlfiedwueR+F3J9F6phWWPbZVF+lJcYTqzN0TWo2VJWu53P++erMwz8rMTIz74S4h5MXnoul2MmgweKOm2/bmemQL+76we6gBsknidqU+mECyoJudI4rY/ZF+YFQFeMhcDr+B6JJSfRU/Qc0tEtqxX63XyxHoLGRi3B97acCTezTB5tfpuwYdrAXkDuceDStd8kd5hzRWFBYonb0UzLCCJMvucYQKOe6xChc+bScdllxLLqHqWeFd8DVN0hjueFvipEEie9mr+GTs9m/36o+7Vu7/Zm/N0MZu2P8NHcgaNJAbzmXepsO7HnniXF8WVgjteR1w9Aft+57R5Z2HbqtKKLCcQEiG2NaukrXOaVYUOy5qYSyLN9Z+C6mn+RwjZvFnL1x2Ze1P0FMkHSCliDsMI8V/PsAf9CLTHzWjnFU5th7bH6s/eehcCyBONyOVC9NJXl8HzLfAbyh7yGjjaih1zK3EdiNuaqfSZc6BzsdiERb8KUx1JDzU="
-addons:
-  coverity_scan:
-
-    project:
-      name: maitesin/acc
-      version: 0.1
-      description: ARM C Compiler
-
-    # Where email notification of build analysis results will be sent
-    notification_email: violador.de.segmentos@gmail.com
-
-    # Commands to prepare for build_command
-    # ** likely specific to your build **
-    build_command_prepend: cmake .
-
-    # The command that will be added as an argument to "cov-build" to compile your project for analysis,
-    # ** likely specific to your build **
-    build_command: make
-
-    # Pattern to match selecting branches that will run analysis. We recommend leaving this set to 'coverity_scan'.
-    # Take care in resource usage, and consider the build frequency allowances per
-    #   https://scan.coverity.com/faq#frequency
-  branch_pattern: master
+- meson build
+- ninja -C build
+- ninja -C build test
